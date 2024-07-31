@@ -33,9 +33,9 @@ const Footer = () => {
   };
 
   return (
-    <footer style={footerStyle} className="text-center py-4">
+    <footer style={footerStyle} className="  text-center  bg-primaryBlack  mb-0">
       <div
-        className="bg-gray-600 text-white cursor-pointer flex justify-center items-center mb-3"
+        className="bg-gray-600 text-white cursor-pointer flex justify-center items-center mb-3 mt-0"
         onClick={handleScrollToTop}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -48,8 +48,8 @@ const Footer = () => {
         <div className="footer-section">
           <h4 className="text-lg font-semibold">Quick Links</h4>
           <ul>
-            <li><Link to="/link1" className="hover:underline">Home</Link></li>
-            <li><Link to="/link2" className="hover:underline">About Us</Link></li>
+            <li><a href="#announcements" className="hover:underline">Announcements</a></li>
+            <li><a href="#faq" className="hover:underline">FAQ</a></li>
             <li><Link to="/link3" className="hover:underline">Staff</Link></li>
           </ul>
         </div>
@@ -58,7 +58,7 @@ const Footer = () => {
           <ul>
             <li><Link to="https://www.google.com/maps/place/Teja+Singh+Hall,+Boys+Hostel+6,+BH6/@30.7633228,76.7669415,17.32z/data=!4m6!3m5!1s0x390ff35f43ba73ff:0xc9723480d879a03d!8m2!3d30.7642332!4d76.7649497!16s%2Fg%2F11kpf86f28?entry=ttu" className="hover:underline">Location</Link></li>
             <li><Link to="/link5" className="hover:underline">Events</Link></li>
-            <li><Link to="/link6" className="hover:underline">Gallery</Link></li>
+            <li><a href="#gallery" className="hover:underline">Gallery</a></li>
           </ul>
         </div>
         <div className="footer-section">

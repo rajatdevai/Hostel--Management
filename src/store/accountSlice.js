@@ -1,60 +1,95 @@
-import { createSlice } from '@reduxjs/toolkit';
+// src/redux/slices/accountSlice.js
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const initialState = {
-    firstName: '',
-    lastName: '',
-    businessName: '',
-    brandName: '',
-    slogan: '',
-    designRequirements: [],
-    niche: [],
-    otherDetails: '',
-    fontOptions: [],
-    colorOptions: [],
-    user: null,
-    userId: null,
-    
-    
-    username: '',
-    address: '',
-    city: '',
-    postalCode: '',
-    country: '',
-    profileImg: {},
-    token: null
-};
+// Define async thunk for signup
+export const signupUser = createAsyncThunk(
+  'account/signupUser',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'An error occurred');
+      }
+      return data;
+    } catch (err) {
+      return rejectWithValue('An error occurred');
+    }
+  }
+);
+
+// Define async thunk for login
+export const loginUser = createAsyncThunk(
+  'account/loginUser',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'An error occurred');
+      }
+      return data;
+    } catch (err) {
+      return rejectWithValue('An error occurred');
+    }
+  }
+);
 
 const accountSlice = createSlice({
-    name: 'account',
-    initialState,
-    reducers: {
-        updateFormData: (state, action) => {
-            return { ...state, ...action.payload };
-        },
-      
-        setUser: (state, action) => {
-            
-            const { user, token, userId } = action.payload;
-            state.user = user;
-            state.userId=userId;
-            state.token = token;
-            localStorage.setItem('token', token); // persist token in localStorage
-            localStorage.setItem('user', JSON.stringify(user)); // persist user in localStorage
-        },
-        removeToken: (state) => {
-            state.token = null;
-            state.user = null;
-            state.userId = null;
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-        },
-        resetFormData: () => initialState,
-        updateProfileField: (state, action) => {
-            const { field, value } = action.payload;
-            state[field] = value;
-        }
+  name: 'account',
+  initialState: {
+    user: null,
+    loading: false,
+    error: null,
+  },
+  reducers: {
+    logout(state) {
+      state.user = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(signupUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(signupUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-export const { updateFormData, setUser, removeToken, resetFormData, updateProfileField } = accountSlice.actions;
+export const { logout } = accountSlice.actions;
+
 export default accountSlice.reducer;

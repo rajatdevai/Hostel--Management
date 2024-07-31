@@ -10,7 +10,7 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
-  const [mailAllow, setMailAllow] = useState(false);
+  // const [mailAllow, setMailAllow] = useState(false);
   const [isTypingPassword, setIsTypingPassword] = useState(false);
   const [validity, setValidity] = useState({
     lowercase: false,
@@ -52,9 +52,9 @@ function SignUp() {
     });
   };
 
-  const handleMailAllowChange = (e) => {
-    setMailAllow(e.target.checked);
-  };
+  // const handleMailAllowChange = (e) => {
+  //   setMailAllow(e.target.checked);
+  // };
 
   const isFormValid = () => {
     const isValidPassword = Object.values(validity).every(Boolean);
@@ -76,12 +76,12 @@ function SignUp() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('http://localhost:5000/api/auth/signup', {
+        const response = await fetch('http://localhost:5000/api/auth/sign-up', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email, username, phoneNo, password, mailAllow }),
+          body: JSON.stringify({ email, username, phoneNo, password }),
         });
 
         const data = await response.json();
@@ -204,7 +204,7 @@ function SignUp() {
                     </div>
                   )}
                 </div>
-                <div className="mb-6">
+                {/* <div className="mb-6">
                   <label className="text-white text-base font-medium flex items-center">
                     <input
                       type="checkbox"
@@ -214,7 +214,7 @@ function SignUp() {
                     />
                     Allow email notifications
                   </label>
-                </div>
+                </div> */}
                 <button
                   type="submit"
                   className={`w-full p-3 rounded-lg bg-primaryGreen text-white font-semibold mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}

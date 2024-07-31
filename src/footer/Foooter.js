@@ -6,12 +6,10 @@ import Footer from './Footer';
 
 function Foooter() {
   return (
-    
-      <div className="App flex flex-col min-h-screen">
-        {/* Other components */}
+    <>
         <div className="flex-grow">
           <Routes>
-            <Route path="/link1" element={<div>Content for Link 1</div>} />
+            <Route path=".gallery" element={<div>Content for Link 1</div>} />
             <Route path="/link2" element={<div>Content for Link 2</div>} />
             <Route path="/link3" element={<div>Content for Link 3</div>} />
             <Route path="/link5" element={<div>Content for Link 5</div>} />
@@ -21,10 +19,9 @@ function Foooter() {
           </Routes>
         </div>
         <Footer />
-      </div>
+      </>
     
   );
 }
 
 export default Foooter;
-
