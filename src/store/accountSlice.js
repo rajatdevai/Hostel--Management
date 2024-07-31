@@ -13,8 +13,8 @@ const initialState = {
     colorOptions: [],
     user: null,
     userId: null,
-    workEmail: '',
-    phoneNo: '',
+    
+    
     username: '',
     address: '',
     city: '',

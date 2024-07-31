@@ -1,8 +1,8 @@
-// Layout/Auth.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import SignIn from '../Pages/Auth/SignIn/SignIn';
 import SignUp from '../Pages/Auth/SignUp/SignUp';
+import VerifyEmail from '../Pages/Auth/SignUp/verifyEmail'; // Adjusted path
 
 const routes = [
   {
@@ -11,6 +11,7 @@ const routes = [
     pages: [
       { name: 'sign in', path: '/auth/sign-in', element: <SignIn /> },
       { name: 'sign up', path: '/auth/sign-up', element: <SignUp /> },
+      { name: 'verify email', path: '/auth/verify-email', element: <VerifyEmail /> }, // Added route
     ],
   },
 ];

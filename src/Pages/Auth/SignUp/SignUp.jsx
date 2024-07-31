@@ -1,15 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { CheckCircleIcon, ChevronDownIcon, QuestionMarkCircleIcon, EyeIcon, EyeSlashIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
-import { DotGroup } from "../../../Components/Dot.jsx";
-import LeftSide from "../../../Components/LeftSide.jsx";
+import { CheckCircleIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { DotGroup } from "../../../Components/Dot";
+import LeftSide from "../../../Components/LeftSide";
 
-export function SignUp() {
+function SignUp() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  const [mailAllow, setMailAllow] = useState(false);
   const [isTypingPassword, setIsTypingPassword] = useState(false);
   const [validity, setValidity] = useState({
     lowercase: false,
@@ -20,6 +21,7 @@ export function SignUp() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -33,8 +35,8 @@ export function SignUp() {
     setUsername(e.target.value);
   };
 
-  const handlePhonenumberChange = (e) => {
-    setPhonenumber(e.target.value);
+  const handlePhoneNoChange = (e) => {
+    setPhoneNo(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -50,9 +52,13 @@ export function SignUp() {
     });
   };
 
+  const handleMailAllowChange = (e) => {
+    setMailAllow(e.target.checked);
+  };
+
   const isFormValid = () => {
     const isValidPassword = Object.values(validity).every(Boolean);
-    return email && username && phonenumber && isValidPassword;
+    return email && username && phoneNo && isValidPassword;
   };
 
   const handlePhoneNumberKeyDown = (e) => {
@@ -64,14 +70,32 @@ export function SignUp() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isFormValid()) {
       setLoading(true);
-      setTimeout(() => {
-        setIsSubmitted(true);
+      setError(null);
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, username, phoneNo, password, mailAllow }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setIsSubmitted(true);
+        } else {
+          setError(data.message || 'An error occurred');
+        }
+      } catch (err) {
+        setError('An error occurred');
+      } finally {
         setLoading(false);
-      }, 2000);
+      }
     }
   };
 
@@ -79,7 +103,7 @@ export function SignUp() {
     <section className="bg-secondaryBlack mmd:flex-1 mmd:flex-row relative">
       <LeftSide />
       <div className="mmd:left-[38%] w-full bg-secondaryBlack mmd:w-[62%] p-10 overflow-x-hidden absolute min-h-screen flex-grow">
-        <div className="">
+        <div>
           <div className="hidden fixed top-1 left-[38%] ml-5 mmd:flex flex-col space-y-2">
             <DotGroup />
           </div>
@@ -88,8 +112,8 @@ export function SignUp() {
           </div>
           {isSubmitted ? (
             <div className="text-center text-white mt-10">
-              <h3 className="text-2xl font-bold">Check Your Email</h3>
-              <p>We've sent a verification link to {email}. Please check your inbox.</p>
+              <h3 className="text-2xl font-bold">Registration Successful</h3>
+              <p>You can now log in with your new account.</p>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center bg-secondaryBlack">
@@ -97,142 +121,111 @@ export function SignUp() {
                 <h3 className="text-white text-2xl font-bold mb-4">Sign up with free trial</h3>
                 <p className="text-sm font-normal text-gray-400">Empower your experience, sign up for a free account today</p>
               </div>
-              <form className="mmd:mt-8 mb-2 sm:w-3/4 max-w-screen-lg lgg:w-[60%]" onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} className="mb-2 w-auto md:w-[60%] mt-4">
+                {error && (
+                  <div className="text-red-500 text-center mb-4">{error}</div>
+                )}
                 <div className="mb-6">
-                  <label className="text-white text-base font-medium">Work email*</label>
+                  <label className="text-white text-base font-medium">Email*</label>
                   <input
                     type="email"
                     value={email}
                     onChange={handleEmailChange}
-                    placeholder="name@mail.com"
+                    placeholder="Enter your email"
                     className="w-full p-3 bg-primaryBlack border-none text-white rounded-lg mt-1"
                     required
                   />
                 </div>
                 <div className="mb-6">
                   <label className="text-white text-base font-medium">Username*</label>
-                  <div className="relative flex bg-primaryBlack rounded-lg overflow-hidden mt-1">
-                    <input
-                      type="text"
-                      value={username}
-                      onChange={handleUsernameChange}
-                      placeholder="Enter username"
-                      className="w-full p-3 bg-primaryBlack border-none text-white"
-                      required
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                      <ShieldCheckIcon className="text-primaryGreen h-5 w-5" />
-                    </div>
-                  </div>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={handleUsernameChange}
+                    placeholder="Enter your username"
+                    className="w-full p-3 bg-primaryBlack border-none text-white rounded-lg mt-1"
+                    required
+                  />
                 </div>
                 <div className="mb-6">
-                  <label className="text-white font-medium mb-1 flex items-center">
-                    Phone number*
-                    <span className="text-primaryGreen text-xs ml-1 flex items-center">
-                      Why
-                      <QuestionMarkCircleIcon className="w-4 h-4 ml-0.5" />
-                    </span>
-                  </label>
-                  <div className="relative flex bg-primaryBlack rounded-lg overflow-hidden">
-                    <div className="flex items-center bg-primaryBlack text-gray-300 px-2 border-r border-gray-700">
-                      <span>+91</span>
-                      <ChevronDownIcon className="text-gray-300 h-4 w-6 ml-2 cursor-pointer hover:bg-slate-400 rounded-full hover:bg-opacity-20" />
-                    </div>
-                    <input
-                      type="tel"
-                      placeholder="Enter phone number"
-                      value={phonenumber}
-                      onChange={handlePhonenumberChange}
-                      className="w-full p-3 bg-primaryBlack border-none text-white"
-                      required
-                      pattern="\d*"
-                      onKeyDown={handlePhoneNumberKeyDown}
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                      <ShieldCheckIcon className="text-primaryGreen h-5 w-5" />
-                    </div>
-                  </div>
+                  <label className="text-white text-base font-medium">Phone Number*</label>
+                  <input
+                    type="text"
+                    value={phoneNo}
+                    onChange={handlePhoneNoChange}
+                    onKeyDown={handlePhoneNumberKeyDown}
+                    maxLength={10}
+                    placeholder="Enter your phone number"
+                    className="w-full p-3 bg-primaryBlack border-none text-white rounded-lg mt-1"
+                    required
+                  />
                 </div>
-                <div className="mb-6">
-                  <label className="text-white font-medium mb-1">Password*</label>
-                  <div className="relative">
+                <div className="mb-6 relative">
+                  <label className="text-white text-base font-medium">Password*</label>
+                  <div className="relative mt-1">
                     <input
                       type={passwordVisible ? "text" : "password"}
-                      placeholder="Enter password"
-                      className="w-full p-3 bg-primaryBlack border-none text-white rounded-lg mt-1"
                       value={password}
                       onChange={handlePasswordChange}
-                      onBlur={() => setIsTypingPassword(false)}
-                      onFocus={() => setIsTypingPassword(true)}
+                      placeholder="Create a password"
+                      className="w-full p-3 bg-primaryBlack border-none text-white rounded-lg"
                       required
                     />
-                    <div
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                    <button
+                      type="button"
                       onClick={togglePasswordVisibility}
+                      className="absolute right-3 top-3 text-white"
                     >
-                      {passwordVisible ? (
-                        <EyeSlashIcon className="h-5 w-5 text-primaryGreen" />
-                      ) : (
-                        <EyeIcon className="h-5 w-5 text-gray-600" />
-                      )}
-                    </div>
+                      {passwordVisible ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                    </button>
                   </div>
+                  {isTypingPassword && (
+                    <div className="text-gray-400 mt-2">
+                      <p className="flex items-center">
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.lowercase ? 'text-primaryGreen' : ''}`} />
+                        At least one lowercase letter
+                      </p>
+                      <p className="flex items-center">
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.uppercase ? 'text-primaryGreen' : ''}`} />
+                        At least one uppercase letter
+                      </p>
+                      <p className="flex items-center">
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.number ? 'text-primaryGreen' : ''}`} />
+                        At least one number
+                      </p>
+                      <p className="flex items-center">
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.specialChar ? 'text-primaryGreen' : ''}`} />
+                        At least one special character
+                      </p>
+                      <p className="flex items-center">
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.minLength ? 'text-primaryGreen' : ''}`} />
+                        Minimum 8 characters
+                      </p>
+                    </div>
+                  )}
                 </div>
-                {isTypingPassword && (
-                  <div>
-                    <div className="flex items-center mt-4">
-                      <div className='flex items-center mr-9'>
-                        <CheckCircleIcon className={`h-5 w-5 ${validity.lowercase ? "text-primaryGreen" : "text-gray-600"}`} />
-                        <span className={`text-[13px] ml-2 ${validity.lowercase ? "text-primaryGreen" : "text-gray-600"}`}>One lowercase character</span>
-                      </div>
-                      <div className='flex items-center'>
-                        <CheckCircleIcon className={`h-5 w-5 ${validity.number ? "text-primaryGreen" : "text-gray-600"}`} />
-                        <span className={`text-[13px] ml-2 ${validity.number ? "text-primaryGreen" : "text-gray-600"}`}>One number</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center mt-2">
-                      <div className='flex items-center mr-9'>
-                        <CheckCircleIcon className={`h-5 w-5 ${validity.uppercase ? "text-primaryGreen" : "text-gray-600"}`} />
-                        <span className={`text-[13px] ml-2 ${validity.uppercase ? "text-primaryGreen" : "text-gray-600"}`}>One uppercase character</span>
-                      </div>
-                      <div className='flex items-center'>
-                        <CheckCircleIcon className={`h-5 w-5 ${validity.specialChar ? "text-primaryGreen" : "text-gray-600"}`} />
-                        <span className={`text-[13px] ml-2 ${validity.specialChar ? "text-primaryGreen" : "text-gray-600"}`}>One special character</span>
-                      </div>
-                    </div>
-                    <div className='flex items-center mt-2'>
-                      <CheckCircleIcon className={`h-5 w-5 ${validity.minLength ? "text-primaryGreen" : "text-gray-600"}`} />
-                      <span className={`text-[13px] ml-2 ${validity.minLength ? "text-primaryGreen" : "text-gray-600"}`}>8 character minimum</span>
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-center justify-center mt-6">
-                  <div className="flex items-start justify-center">
-                    <div className="w-8">
-                      <input type="checkbox" id="exclude-emails" className="mr-2" />
-                    </div>
-                    <label htmlFor="exclude-emails" className="text-gray-600 text-sm">
-                      Please exclude me from any future emails regarding any updates and events .
-                    </label>
-                  </div>
+                <div className="mb-6">
+                  <label className="text-white text-base font-medium flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={mailAllow}
+                      onChange={handleMailAllowChange}
+                      className="mr-2"
+                    />
+                    Allow email notifications
+                  </label>
                 </div>
-                <p className="text-gray-500 mt-4 text-[13px]">
-                  By registering for an account, you will be part of our esteemed family of BOYS HOSTEL NO. 6  <Link to="http://www.puchd.ac.in" className="text-primaryGreen underline" target="_blank" rel="noopener noreferrer">
-   Panjab University
-</Link> 
-                </p>
                 <button
                   type="submit"
-                  className={`mt-6 w-full p-3 font-bold bg-primaryGreen text-primaryBlack rounded-lg ${isFormValid() ? "cursor-pointer" : "cursor-not-allowed hover:bg-primaryGrey"}`}
-                  disabled={!isFormValid()}
-                >{
-                  loading ? <span>Onboarding...</span> : "Welcome"
-                }</button>
-                <p className="text-center text-white font-medium mt-4">
-                  Already have an account?
-                  <Link to="/auth/sign-in" className="text-primaryGreen ml-1">Login</Link>
-                </p>
+                  className={`w-full p-3 rounded-lg bg-primaryGreen text-white font-semibold mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={loading}
+                >
+                  {loading ? 'Registering...' : 'Sign Up'}
+                </button>
               </form>
+              <div className="text-sm font-medium text-white text-center mt-4">
+                Already have an account? <Link to="/login" className="text-primaryGreen">Log In</Link>
+              </div>
             </div>
           )}
         </div>
@@ -242,3 +235,4 @@ export function SignUp() {
 }
 
 export default SignUp;
+
