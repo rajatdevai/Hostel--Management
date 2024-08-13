@@ -74,10 +74,10 @@ const Home = () => {
     ];
 
     const photoGalleryImages = [
-        'https://imgs.search.brave.com/5737wLq74i65H0qMxSEFEeu8PgYAgBkcfKmFV0sca6c/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy85/Lzk4L1BhbmphYl9V/bml2ZXJzaXR5X0Nh/bXB1cy5qcGc',
-        'https://imgs.search.brave.com/5737wLq74i65H0qMxSEFEeu8PgYAgBkcfKmFV0sca6c/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy85/Lzk4L1BhbmphYl9V/bml2ZXJzaXR5X0Nh/bXB1cy5qcGc',
-        'https://imgs.search.brave.com/5737wLq74i65H0qMxSEFEeu8PgYAgBkcfKmFV0sca6c/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy85/Lzk4L1BhbmphYl9V/bml2ZXJzaXR5X0Nh/bXB1cy5qcGc',
-        'https://imgs.search.brave.com/5737wLq74i65H0qMxSEFEeu8PgYAgBkcfKmFV0sca6c/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy85/Lzk4L1BhbmphYl9V/bml2ZXJzaXR5X0Nh/bXB1cy5qcGc',
+        'https://puchd.ac.in/photos/slide3.png',
+        'https://puchd.ac.in/photos/jln-joshi.jpg',
+        'https://puchd.ac.in/photos/slide4.png',
+        'https://puchd.ac.in/photos/slide4.png',
         'https://imgs.search.brave.com/zat1bqkP_DXul1OUeKBtuDrllUXSd-8v7d99MyuZqYQ/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5vbnRoZW1hcmtl/dC5jb20vcHJvcGVy/dGllcy8xNDczMDUx/Ni8xNDg2NzMzMTM1/L2ltYWdlLTMtNDgw/eDMyMC5qcGc',
         'https://imgs.search.brave.com/5737wLq74i65H0qMxSEFEeu8PgYAgBkcfKmFV0sca6c/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy85/Lzk4L1BhbmphYl9V/bml2ZXJzaXR5X0Nh/bXB1cy5qcGc',
         'https://imgs.search.brave.com/5737wLq74i65H0qMxSEFEeu8PgYAgBkcfKmFV0sca6c/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy85/Lzk4L1BhbmphYl9V/bml2ZXJzaXR5X0Nh/bXB1cy5qcGc',

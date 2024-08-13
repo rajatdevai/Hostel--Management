@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import LeftSide from "../../../Components/LeftSide";
 import { DotGroup } from "../../../Components/Dot";
@@ -8,6 +8,7 @@ function SignIn() {
   const [workEmail, setWorkEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
     setWorkEmail(e.target.value);
@@ -24,6 +25,9 @@ function SignIn() {
   const handleSubmitLogin = (e) => {
     e.preventDefault();
     console.log("Login submitted");
+
+    // After successful login
+    navigate("/accountsetup");
   };
 
   return (
@@ -39,7 +43,7 @@ function SignIn() {
           </div>
           <div className="flex flex-col items-center justify-center bg-secondaryBlack">
             <div className="text-center mt-10">
-              <h3 className="text-2xl font-bold mb-4">Sign In to your Account</h3>
+              <h3 className="text-2xl text-white font-bold mb-4">Sign In to your Account</h3>
               <p className="text-sm font-normal text-gray-400">Welcome back! Please enter your credentials to log in.</p>
             </div>
 

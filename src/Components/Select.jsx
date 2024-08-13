@@ -17,9 +17,9 @@ const Select = ({ options, value, onChange, multiple = false }) => {
         !query?.trim() ||
         (multiple
             ? value.some(
-                  (item) =>
-                      item?.toLocaleLowerCase()?.trim() === query?.toLocaleLowerCase()?.trim()
-              )
+                (item) =>
+                    item?.toLocaleLowerCase()?.trim() === query?.toLocaleLowerCase()?.trim()
+            )
             : value === query);
 
     const handleRemove = (tag) => {
@@ -33,7 +33,7 @@ const Select = ({ options, value, onChange, multiple = false }) => {
 
     useEffect(() => {
         if (inputRef.current) {
-            inputRef.current.style.width = `${inputRef.current.value.length + 1}ch`;
+            inputRef.current.style.width = ${inputRef.current.value.length + 1}ch;
         }
     }, [query]);
 
@@ -51,7 +51,7 @@ const Select = ({ options, value, onChange, multiple = false }) => {
         <div className="w-full grid place-items-center mt-1">
             <div className="relative w-full text-sm text-white" onBlur={handleBlur} tabIndex="0">
                 <div className="card flex items-center justify-between p-3 w-full gap-2.5">
-                    <div className="flex flex-wrap flex-1 items-center gap-1 z-10">
+                    <div className="flex flex-wrap flex-1 items-center gap-1 z-10 bg-transparent">
                         {multiple ? (
                             value?.map((tag) => (
                                 <div
@@ -61,18 +61,15 @@ const Select = ({ options, value, onChange, multiple = false }) => {
                                     {tag}
                                     <div
                                         onMouseDown={(e) => e.preventDefault()}
-                                        onClick={() => handleRemove(tag)
-}
-                                >
-                                                                        <XCircleIcon className="w-4 h-4 cursor-pointer" />
+                                        onClick={() => handleRemove(tag)}
+                                    >
+                                        <XCircleIcon className="w-4 h-4 cursor-pointer" />
                                     </div>
                                 </div>
                             ))
                         ) : (
                             value && (
-                                <div
-                                    className=" text-white"
-                                >
+                                <div className="text-white">
                                     {value}
                                 </div>
                             )
@@ -88,10 +85,10 @@ const Select = ({ options, value, onChange, multiple = false }) => {
                                         ? "Please add your requirements"
                                         : ""
                                     : value?.length === 0 && query === ""
-                                    ? "Select Priority"
-                                    : ""
+                                        ? "Select Priority"
+                                        : ""
                             }
-                            className="bg-transparent text-[16px] flex-1 text-white "
+                            className="w-full p-3 bg-transparent border-none text-white rounded-lg resize-none mt-1 flex-1"
                             onClick={toggleMenu}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !isDisable) {
@@ -107,19 +104,19 @@ const Select = ({ options, value, onChange, multiple = false }) => {
                             style={{ minWidth: "50px", color: "white", height: "30px" }}
                         />
                         <ChevronDownIcon
-                            className="w-5 h-5 text-gray-500 cursor-pointer"
+                            className="w-6 h-7 bg-secondaryBlack text-gray-500 cursor-pointer rounded-lg"
                             onClick={toggleMenu}
                         />
                     </div>
                 </div>
 
                 {menuOpen && filteredOptions.length > 0 && (
-                    <div className="card absolute w-full max-h-52 mt-2 p-1 flex overflow-y-auto custom-scrollbar z-20">
+                    <div className="bg-pink-100 text-black card absolute w-full max-h-52 mt-2 p-1 flex overflow-y-auto custom-scrollbar z-20 border rounded-lg">
                         <ul className="w-full">
                             {filteredOptions?.map((option) => (
                                 <li
                                     key={option}
-                                    className="p-2 cursor-pointer hover:bg-primaryGrey text-white rounded-md w-full"
+                                    className="p-2 cursor-pointer hover:bg-primaryGrey text-black rounded-md w-full"
                                     onMouseDown={(e) => e.preventDefault()}
                                     onClick={() => {
                                         if (multiple) {

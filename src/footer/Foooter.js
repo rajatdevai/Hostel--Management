@@ -15,7 +15,7 @@ function Foooter() {
             <Route path="/link5" element={<div>Content for Link 5</div>} />
             <Route path="/link6" element={<div>Content for Link 6</div>} />
             {/* <Route path="/" element={<FeeStructure/>} /> */}
-            {/* <Route path="/" element={<div> Home </div>} /> */}
+            <Route path="/" element={<div> Home </div>} />
           </Routes>
         </div>
         <Footer />

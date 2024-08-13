@@ -1,78 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 
 const Members = () => {
     const [selectedTab, setSelectedTab] = useState('Students');
-    const [members, setMembers] = useState({
-        students: [
-            { id: 1, name: 'Mohit Kumar', room: '234-4/17', department: 'UIET', phone: '9835393707', profilePic: 'path/to/profile-pic1.jpg' }
-        ],
-        staff: [
-            { id: 1, name: 'Mahesh Kumar', designation: 'Barber', phone: '9835393707', rating: 3, profilePic: 'path/to/profile-pic2.jpg' }
-        ],
-        higherAuthorities: [
-            { id: 1, name: 'Jodh Singh', designation: 'Warden', phone: '98349824984', availability: '10am-4:00pm', profilePic: 'path/to/profile-pic3.jpg' }
-        ]
-    });
+    const [members, setMembers] = useState({ students: [], staff: [], higherAuthorities: [] });
 
-    const renderRating = (rating) => {
-        return (
-            <div className="flex justify-center">
-                {[...Array(5)].map((_, index) => (
-                    index < rating ? <AiFillStar key={index} className="text-yellow-500" /> : <AiOutlineStar key={index} className="text-gray-500" />
-                ))}
-            </div>
-        );
-    };
+    useEffect(() => {
+        const fetchMembers = async () => {
+            const response = await fetch('http://localhost:5000/api/account/setup');
+            const data = await response.json();
+            const categorizedMembers = { students: [], staff: [], higherAuthorities: [] };
+
+            data.forEach(member => {
+                if (member.designation.includes('Student')) {
+                    categorizedMembers.students.push(member);
+                } else if (member.designation.includes('Staff Member')) {
+                    categorizedMembers.staff.push(member);
+                } else if (member.designation.includes('Higher Authority')) {
+                    categorizedMembers.higherAuthorities.push(member);
+                }
+            });
+
+            setMembers(categorizedMembers);
+        };
+
+        fetchMembers();
+    }, []);
 
     const renderTableContent = () => {
+        const renderMembers = (membersList) => (
+            <tbody>
+                {membersList.map((member) => (
+                    <tr key={member._id} className='border-t border-white text-white'>
+                        <td className="py-4 px-4"><img src={`http://localhost:5000/uploads/${member.profilePicture}`} alt="Profile" className="w-8 h-8 rounded-full" /></td>
+                        <td className="py-4 px-4">{member.firstName} {member.lastName}</td>
+                        <td className="py-4 text-left">{member.identityCode}</td>
+                        <td className="py-4 text-center">{member.phoneNo}</td>
+                        <td className="py-4 text-center">{member.department}</td> {/* Changed from designation to department */}
+                    </tr>
+                ))}
+            </tbody>
+        );
+
         switch (selectedTab) {
             case 'Staff Members':
-                return (
-                    <tbody>
-                        {members.staff.map((member) => (
-                            <tr key={member.id} className='border-t border-white text-white'>
-                                <td className="py-4 px-4"><img src={member.profilePic} alt="Profile" className="w-8 h-8 rounded-full" /></td>
-                                <td className="py-4 px-4">{member.name}</td>
-                                <td className="py-4 text-left">{member.designation}</td>
-                                <td className="py-4 text-center">{member.phone}</td>
-                                <td className="py-4 text-center">
-                                    {renderRating(member.rating)}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                );
+                return renderMembers(members.staff);
             case 'Higher Authorities':
-                return (
-                    <tbody>
-                        {members.higherAuthorities.map((member) => (
-                            <tr key={member.id} className='border-t border-white text-white'>
-                                <td className="py-4 px-4"><img src={member.profilePic} alt="Profile" className="w-8 h-8 rounded-full" /></td>
-                                <td className="py-4 px-4">{member.name}</td>
-                                <td className="py-4 text-left">{member.designation}</td>
-                                <td className="py-4 text-center">{member.phone}</td>
-                                <td className="py-4 text-center">{member.availability}</td>
-                                <td className="py-4 text-center"><button className="border border-primaryGreen text-white rounded-full px-4 py-1">See Files</button></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                );
+                return renderMembers(members.higherAuthorities);
             case 'Students':
             default:
-                return (
-                    <tbody>
-                        {members.students.map((student) => (
-                            <tr key={student.id} className='border-t border-white text-white'>
-                                <td className="py-4 px-4"><img src={student.profilePic} alt="Profile" className="w-8 h-8 rounded-full" /></td>
-                                <td className="py-4 px-4">{student.name}</td>
-                                <td className="py-4 text-left">{student.room}</td>
-                                <td className="py-4 text-center">{student.department}</td>
-                                <td className="py-4 text-center">{student.phone}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                );
+                return renderMembers(members.students);
         }
     };
 
@@ -91,9 +68,9 @@ const Members = () => {
                             <tr>
                                 <th className="py-2 px-4 text-primarypurple text-left">Profile</th>
                                 <th className="py-2 px-4 text-primarypurple text-left">Name</th>
-                                <th className="py-2 text-primarypurple text-left">Description</th>
+                                <th className="py-2 text-primarypurple text-left">Identity</th>
                                 <th className="py-2 text-primarypurple text-center">Contact</th>
-                                <th className="py-2 text-primarypurple text-center">Details</th>
+                                <th className="py-2 text-primarypurple text-center">Department</th> {/* Changed from Details to Department */}
                             </tr>
                         </thead>
                         {renderTableContent()}

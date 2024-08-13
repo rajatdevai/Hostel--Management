@@ -35,7 +35,7 @@ const LeftSide = () => {
                     <h1 className="text-primaryGreen text-4xl font-bold">journey with us!</h1>
                 </div>
             </div>
-            <HomeSlide />
+            {/* <HomeSlide /> */}
             <div className="relative h-full">
                 <div className="absolute flex justify-center bottom-16 -left-4">
                     <BigDotGroup />

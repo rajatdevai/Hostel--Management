@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import SignIn from '../SignIn/SignIn.jsx'; 
 import { CheckCircleIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { DotGroup } from "../../../Components/Dot";
 import LeftSide from "../../../Components/LeftSide";
@@ -10,7 +12,6 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
-  // const [mailAllow, setMailAllow] = useState(false);
   const [isTypingPassword, setIsTypingPassword] = useState(false);
   const [validity, setValidity] = useState({
     lowercase: false,
@@ -52,10 +53,6 @@ function SignUp() {
     });
   };
 
-  // const handleMailAllowChange = (e) => {
-  //   setMailAllow(e.target.checked);
-  // };
-
   const isFormValid = () => {
     const isValidPassword = Object.values(validity).every(Boolean);
     return email && username && phoneNo && isValidPassword;
@@ -76,28 +73,33 @@ function SignUp() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('http://localhost:5000/api/auth/sign-up', {
-          method: 'POST',
+        const payload = {
+          email,
+          username,
+          phoneNumber: phoneNo, 
+          password
+        };
+        console.log('Payload:', payload);
+        const response = await axios.post('http://localhost:5000/api/auth/signup', payload, {
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json', 
           },
-          body: JSON.stringify({ email, username, phoneNo, password }),
         });
-
-        const data = await response.json();
-
-        if (response.ok) {
+  
+        if (response.status === 200) {
           setIsSubmitted(true);
         } else {
-          setError(data.message || 'An error occurred');
+          setError(response.data.message || 'An error occurred');
         }
       } catch (err) {
+        console.error('Axios error:', err.response || err.message); // Log Axios error
         setError('An error occurred');
       } finally {
         setLoading(false);
       }
     }
   };
+  
 
   return (
     <section className="bg-secondaryBlack mmd:flex-1 mmd:flex-row relative">
@@ -182,49 +184,41 @@ function SignUp() {
                   {isTypingPassword && (
                     <div className="text-gray-400 mt-2">
                       <p className="flex items-center">
-                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.lowercase ? 'text-primaryGreen' : ''}`} />
-                        At least one lowercase letter
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.lowercase ? 'text-green-500' : 'text-gray-400'}`} />
+                        One lowercase character
                       </p>
                       <p className="flex items-center">
-                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.uppercase ? 'text-primaryGreen' : ''}`} />
-                        At least one uppercase letter
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.number ? 'text-green-500' : 'text-gray-400'}`} />
+                        One number
                       </p>
                       <p className="flex items-center">
-                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.number ? 'text-primaryGreen' : ''}`} />
-                        At least one number
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.uppercase ? 'text-green-500' : 'text-gray-400'}`} />
+                        One uppercase character
                       </p>
                       <p className="flex items-center">
-                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.specialChar ? 'text-primaryGreen' : ''}`} />
-                        At least one special character
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.specialChar ? 'text-green-500' : 'text-gray-400'}`} />
+                        One special character
                       </p>
                       <p className="flex items-center">
-                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.minLength ? 'text-primaryGreen' : ''}`} />
+                        <CheckCircleIcon className={`h-5 w-5 mr-2 ${validity.minLength ? 'text-green-500' : 'text-gray-400'}`} />
                         Minimum 8 characters
                       </p>
                     </div>
                   )}
                 </div>
-                {/* <div className="mb-6">
-                  <label className="text-white text-base font-medium flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={mailAllow}
-                      onChange={handleMailAllowChange}
-                      className="mr-2"
-                    />
-                    Allow email notifications
-                  </label>
-                </div> */}
                 <button
                   type="submit"
-                  className={`w-full p-3 rounded-lg bg-primaryGreen text-white font-semibold mt-4 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className="w-full bg-primaryGreen text-white p-3 rounded-lg font-medium mt-6"
                   disabled={loading}
                 >
-                  {loading ? 'Registering...' : 'Sign Up'}
+                  {loading ? "Signing Up..." : "Sign Up"}
                 </button>
               </form>
-              <div className="text-sm font-medium text-white text-center mt-4">
-                Already have an account? <Link to="/login" className="text-primaryGreen">Log In</Link>
+              <div className="mt-6 text-center">
+                <p className="text-gray-400 text-sm">
+                  Already have an account?{" "}
+                  <Link to="/auth/sign-in" className="text-primaryGreen font-medium">Sign In</Link>
+                  </p>
               </div>
             </div>
           )}
@@ -235,4 +229,3 @@ function SignUp() {
 }
 
 export default SignUp;
-

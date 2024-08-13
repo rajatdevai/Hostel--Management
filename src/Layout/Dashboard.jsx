@@ -4,7 +4,7 @@ import { Header, Sidebar} from "../Pages/Dashboard";
 import Members from '../Pages/Dashboard/Members/member';
 import Complaints from '../Pages/Dashboard/Complaints/complaints';
 import RegisterIssue from '../Pages/Dashboard/Complaints/registerIssue';
-// import { useSelector } from 'react-redux';
+
 
 
 const routes = [
