@@ -21,12 +21,12 @@ const HeroSection = () => {
         const typeAndEraseText = async () => {
             const fullText = sentences[currentSentenceIndex];
 
-            // Typing animation
+            // Show text with animation
             setCurrentText(fullText);
             setIsTextVisible(true);
             await new Promise(resolve => setTimeout(resolve, 3000)); // Visible duration
 
-            // Erasing animation
+            // Hide text with animation
             setIsTextVisible(false);
             await new Promise(resolve => setTimeout(resolve, 2000)); // Delay before next sentence
 
@@ -84,10 +84,11 @@ const HeroSection = () => {
             </div>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center">
                 <span
-                    className={`text-primaryGreen text-4xl md:text-6xl font-bold font-roboto-slab tracking-wide ${isTextVisible ? 'opacity-100' : 'opacity-0'}`}
+                    className={`text-white text-4xl md:text-6xl font-bold font-roboto-slab tracking-wide transition-transform duration-1000 ${
+                        isTextVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'
+                    }`}
                     style={{
-                        transition: 'opacity 1s ease-in-out',
-                        transform: isTextVisible ? 'translateY(0)' : 'translateY(100%)'
+                        transition: 'opacity 1s ease-in-out, transform 1s ease-in-out',
                     }}
                 >
                     {currentText}

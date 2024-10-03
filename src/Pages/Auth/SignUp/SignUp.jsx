@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import SignIn from '../SignIn/SignIn.jsx'; 
+import { Link, useNavigate } from "react-router-dom";
 import { CheckCircleIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { DotGroup } from "../../../Components/Dot";
 import LeftSide from "../../../Components/LeftSide";
@@ -23,6 +22,8 @@ function SignUp() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate(); // useNavigate hook
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -79,7 +80,6 @@ function SignUp() {
           phoneNumber: phoneNo, 
           password
         };
-        console.log('Payload:', payload);
         const response = await axios.post('http://localhost:5000/api/auth/signup', payload, {
           headers: {
             'Content-Type': 'application/json', 
@@ -88,6 +88,8 @@ function SignUp() {
   
         if (response.status === 200) {
           setIsSubmitted(true);
+          // Navigate to SignIn page with success message
+          navigate('/auth/sign-in', { state: { message: 'Successful Signup' } });
         } else {
           setError(response.data.message || 'An error occurred');
         }
@@ -100,7 +102,6 @@ function SignUp() {
     }
   };
   
-
   return (
     <section className="bg-secondaryBlack mmd:flex-1 mmd:flex-row relative">
       <LeftSide />
@@ -213,13 +214,10 @@ function SignUp() {
                 >
                   {loading ? "Signing Up..." : "Sign Up"}
                 </button>
+                <p className="text-sm font-normal text-gray-400 mt-4">
+                  Already have an account? <Link to="/auth/sign-in" className="text-primaryGreen">Sign In</Link>
+                </p>
               </form>
-              <div className="mt-6 text-center">
-                <p className="text-gray-400 text-sm">
-                  Already have an account?{" "}
-                  <Link to="/auth/sign-in" className="text-primaryGreen font-medium">Sign In</Link>
-                  </p>
-              </div>
             </div>
           )}
         </div>
